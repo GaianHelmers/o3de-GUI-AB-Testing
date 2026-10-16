@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O3DE GUI A/B</title>
+<link rel="stylesheet" href="viewer/style.css">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" href="#/">O3DE GUI A/B <small id="version-label"></small></a>
+    <nav class="crumbs" id="crumbs" aria-label="Location"></nav>
+    <span class="spacer"></span>
+    <a class="totals" id="totals" href="#/markers" title="All markers"></a>
+    <button class="button" type="button" id="reporter-button" title="Your name in exported reports"></button>
+    <button class="button" type="button" id="import-button" title="Load markers from a report file">Import</button>
+    <button class="button primary" type="button" id="export-button" title="Download every marker as one report file">Export report</button>
+    <a class="button" id="report-link" href="https://github.com/GaianHelmers/o3de-GUI-AB-Testing/issues" target="_blank" rel="noopener"
+        title="Open the project's GitHub issues in a new tab, to send your exported report">Report</a>
+</header>
+<p class="banner" id="storage-banner" hidden>This browser does not keep data for pages opened from disk, so markers will be lost when the page closes.
+    Export a report before closing, or serve the folder: <span class="mono">python -m http.server 8000</span> in the repo, then open
+    <span class="mono">http://localhost:8000</span>.</p>
+<main id="view"></main>
+
+<div class="popover" id="popover" role="dialog" aria-label="New marker" hidden>
+    <div class="where" id="popover-where"></div>
+    <textarea id="popover-note" placeholder="What is wrong here? (optional)" aria-label="Description"></textarea>
+    <div class="actions">
+        <button class="button primary small" type="button" id="popover-save">Add marker</button>
+        <button class="button small" type="button" id="popover-cancel">Cancel</button>
+    </div>
+</div>
+
+<dialog id="reporter-dialog">
+    <form method="dialog">
+        <label for="reporter-name">Your name or GitHub handle (written into exported reports)</label>
+        <input type="text" id="reporter-name" autocomplete="nickname">
+        <div class="actions">
+            <button class="button primary" value="save">Save</button>
+            <button class="button" value="cancel">Cancel</button>
+        </div>
+    </form>
+</dialog>
+
+<input type="file" id="import-file" accept=".md,.txt,text/markdown,text/plain" hidden>
+
+<script src="gallery/version.js"></script>
+<script src="gallery/gallery.js"></script>
+<script src="viewer/markers.js"></script>
+<script src="viewer/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+window.AB_WIDGETS = window.AB_WIDGETS || {};
+window.AB_WIDGETS["MaterialCanvas/MaterialCanvas_00_AzQtComponents--WindowDecorationWrapper__menu--View/B"] = {"dpr":1.5,"classes":["QMenu < QWidget < QObject"],"widgets":[[0,0,346,266,-1,0,"menuView"]]};

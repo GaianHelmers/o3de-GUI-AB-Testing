@@ -1,0 +1,196 @@
+/* O3DE GUI A/B viewer.
+   Layout: a sticky top bar (where you are, marker totals, report actions) over one view at a time:
+   home (group cards), group (screen grid), pair (A and B with crosshair markers + marker list),
+   all markers (table). Dark-first: the captures are a dark editor, judged against a quiet ground. */
+
+:root {
+    --ground: #15171a;
+    --panel: #1d2024;
+    --raised: #252930;
+    --line: #30353d;
+    --text: #e4e6ea;
+    --muted: #98a0ab;
+    --accent: #3d8bfd;
+    --accent-ink: #ffffff;
+    --open: #ff5a5f;
+    --verify: #f5a524;
+    --fixed: #3fb950;
+    --image-ground: #0e0f11;
+    --ui: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: "Cascadia Mono", Consolas, "SF Mono", Menlo, monospace;
+    color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --ground: #f2f3f5;
+        --panel: #ffffff;
+        --raised: #f7f8fa;
+        --line: #d9dde3;
+        --text: #1b1e23;
+        --muted: #5d6570;
+        --accent: #1e70eb;
+        --image-ground: #2a2d31;
+        color-scheme: light;
+    }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--ground); color: var(--text); font: 14px/1.45 var(--ui); min-height: 100vh; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+button, input, textarea, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mono { font-family: var(--mono); font-size: 12px; }
+.muted { color: var(--muted); }
+[hidden] { display: none !important; }
+
+/* ---- buttons */
+.button { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 5px; border: 1px solid var(--line);
+    background: var(--raised); cursor: pointer; white-space: nowrap; }
+.button:hover { border-color: var(--muted); }
+a.button { color: var(--text); text-decoration: none; }
+.button.primary, .button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.button.small { padding: 2px 8px; font-size: 12px; }
+.button:disabled { opacity: .45; cursor: default; border-color: var(--line); }
+.button.danger { color: var(--open); }
+.segmented { display: inline-flex; border: 1px solid var(--line); border-radius: 5px; overflow: hidden; }
+.segmented button { border: 0; background: var(--raised); padding: 5px 11px; cursor: pointer; }
+.segmented button + button { border-left: 1px solid var(--line); }
+.segmented button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.segmented.small button { padding: 1px 10px; font-size: 12px; }
+
+/* ---- top bar */
+.topbar { position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px;
+    padding: 10px 18px; background: var(--panel); border-bottom: 1px solid var(--line); }
+.brand { font-weight: 650; letter-spacing: .01em; }
+.brand small { font-weight: 500; color: var(--muted); margin-left: 6px; }
+.crumbs { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; color: var(--muted); min-width: 0; }
+.crumbs a, .crumbs span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 46ch; }
+.topbar .spacer { flex: 1; }
+.totals { display: flex; gap: 12px; font-variant-numeric: tabular-nums; }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: 0; }
+.dot.open { background: var(--open); }
+.dot.needs-verification { background: var(--verify); }
+.dot.fixed { background: var(--fixed); }
+
+.banner { margin: 0; padding: 8px 18px; background: color-mix(in srgb, var(--verify) 18%, var(--panel)); border-bottom: 1px solid var(--line); }
+
+/* ---- page */
+.page { padding: 22px 18px 60px; max-width: 1500px; margin: 0 auto; display: grid; gap: 22px; }
+h1 { font-size: 22px; margin: 0; }
+h2 { font-size: 15px; margin: 0 0 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.lede { max-width: 80ch; margin: 6px 0 0; color: var(--muted); }
+
+/* ---- cards (home + group) */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.card { display: grid; gap: 6px; padding: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 7px; color: var(--text); }
+a.card:hover { border-color: var(--accent); text-decoration: none; }
+.card .title { font-weight: 600; }
+.card .meta { display: flex; flex-wrap: wrap; gap: 10px; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+.shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.shot { display: grid; gap: 7px; color: var(--text); }
+.shot:hover { text-decoration: none; }
+.shot .frame { position: relative; aspect-ratio: 16 / 10; background: var(--image-ground); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.shot:hover .frame { border-color: var(--accent); }
+.shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.shot img.legacy { opacity: 0; }
+.shot:hover img.legacy { opacity: 1; }
+.shot .caption { font-size: 13px; line-height: 1.3; overflow-wrap: anywhere; }
+.shot .badges { display: flex; gap: 8px; font-size: 12px; color: var(--muted); }
+.shot .tag { position: absolute; left: 6px; bottom: 6px; font-size: 11px; padding: 1px 6px; border-radius: 3px; background: rgba(0, 0, 0, .65); color: #fff; }
+
+/* ---- pair view */
+.pairbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.pairbar .title { font-size: 17px; font-weight: 600; overflow-wrap: anywhere; }
+.pairbar .count { color: var(--muted); font-variant-numeric: tabular-nums; }
+.pairbar .grow { flex: 1; }
+.hint { color: var(--muted); font-size: 12px; }
+
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; align-items: start; }
+.stage { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; min-width: 0; align-items: start; }
+.stage.single { grid-template-columns: 1fr; }
+.side { display: grid; gap: 6px; min-width: 0; margin: 0; align-content: start; }
+.side-label { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
+.side-label b { color: var(--text); }
+.viewport { background: var(--image-ground); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.stage.actual .viewport { overflow: auto; max-height: calc(100vh - 190px); }
+/* A and B share one scale and one top-left corner, so the same image pixel lines up side by side and in a flip.
+   The frame is as wide as the wider capture (app.js: its own pixels, or the whole viewport with Stretch) and
+   centered; each canvas sits at its left, sized by its capture's share of that width, and wraps its image
+   exactly (markers are placed in % of it). */
+.frame { max-width: 100%; margin: 0 auto; }
+.stage.actual .frame { max-width: none; }
+.canvas { position: relative; cursor: crosshair; line-height: 0; }
+.canvas img { display: block; width: 100%; height: auto; user-select: none; -webkit-user-drag: none; }
+
+/* crosshair: center at the marker point, color by state */
+.marker { position: absolute; width: 0; height: 0; color: var(--open); pointer-events: none; }
+.marker.needs-verification { color: var(--verify); }
+.marker.fixed { color: var(--fixed); }
+.marker::before, .marker::after { content: ""; position: absolute; background: currentColor; box-shadow: 0 0 0 1px rgba(0, 0, 0, .55); }
+.marker::before { left: -14px; top: -1px; width: 28px; height: 2px; }
+.marker::after { left: -1px; top: -14px; width: 2px; height: 28px; }
+.marker .ring { position: absolute; left: -9px; top: -9px; width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 50%;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .55); pointer-events: auto; cursor: pointer; }
+.marker .label { position: absolute; left: 11px; top: -24px; padding: 0 5px; border-radius: 3px; background: currentColor;
+    font: 600 11px/16px var(--ui); pointer-events: none; }
+.marker .label span { color: #111; }
+.marker.focus .ring { width: 26px; height: 26px; left: -13px; top: -13px; border-width: 3px; }
+
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 7px; padding: 12px; display: grid; gap: 10px;
+    position: sticky; top: 70px; max-height: calc(100vh - 90px); overflow: auto; }
+.panel h2 { margin: 0; }
+.empty { color: var(--muted); font-size: 13px; }
+.mlist { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.mitem { border: 1px solid var(--line); border-radius: 6px; padding: 8px; display: grid; gap: 6px; background: var(--raised); }
+.mitem.focus { border-color: var(--accent); }
+.mitem .head { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.mitem .num { font-weight: 700; }
+.chip { font-size: 11px; padding: 0 7px; border-radius: 9px; border: 1px solid currentColor; }
+.chip.open { color: var(--open); }
+.chip.needs-verification { color: var(--verify); }
+.chip.fixed { color: var(--fixed); }
+.mitem .widget { font-family: var(--mono); font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
+.mitem .note { white-space: pre-wrap; overflow-wrap: anywhere; }
+.mitem textarea, .popover textarea { width: 100%; min-height: 64px; resize: vertical; padding: 6px; border: 1px solid var(--line);
+    border-radius: 5px; background: var(--panel); }
+.actions { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* full width: on top of any view mode, the images span the window and the marker list moves below them */
+.page.wide { max-width: none; }
+.page.wide .pair { grid-template-columns: 1fr; }
+.page.wide .panel { position: static; max-height: none; }
+.page.wide .mlist { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+
+.popover { position: fixed; z-index: 40; width: 300px; background: var(--panel); border: 1px solid var(--accent); border-radius: 8px;
+    padding: 10px; display: grid; gap: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, .45); }
+.popover .where { font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+
+/* ---- tables (all markers) */
+.table-wrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 7px; }
+table { border-collapse: collapse; width: 100%; min-width: 820px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+
+.toast { position: fixed; right: 18px; bottom: 18px; z-index: 50; background: var(--raised); border: 1px solid var(--line);
+    border-radius: 6px; padding: 9px 14px; box-shadow: 0 6px 20px rgba(0, 0, 0, .35); }
+
+dialog { border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--text); padding: 16px; width: min(420px, 92vw); }
+dialog::backdrop { background: rgba(0, 0, 0, .5); }
+dialog form { display: grid; gap: 10px; }
+dialog input[type="text"] { padding: 6px 8px; border: 1px solid var(--line); border-radius: 5px; background: var(--raised); }
+
+@media (max-width: 1100px) {
+    .pair { grid-template-columns: 1fr; }
+    .panel { position: static; max-height: none; }
+}
+@media (max-width: 700px) {
+    .stage { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: no-preference) {
+    .shot img.legacy { transition: opacity .12s; }
+}

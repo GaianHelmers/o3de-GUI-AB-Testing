@@ -1,0 +1,2 @@
+window.AB_WIDGETS = window.AB_WIDGETS || {};
+window.AB_WIDGETS["LuaIDE/LuaIDE_00_AzQtComponents--WindowDecorationWrapper__menu--Debug/A"] = {"dpr":1.5,"classes":["QMenu < QWidget < QObject","AzToolsFramework::TargetSelectorButton < QPushButton < QAbstractButton","LUA::TargetContextButton < QPushButton < QAbstractButton","LUAEditor::DebugAttachmentButton < QPushButton < QAbstractButton"],"widgets":[[0,0,247,273,-1,0,"menuDebug"],[2,197,243,24,0,1,""],[2,221,243,24,0,2,""],[2,245,243,24,0,3,""]]};
