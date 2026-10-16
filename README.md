@@ -1,5 +1,7 @@
 # O3DE GUI A/B
 
+<img width="2272" height="824" alt="image" src="https://github.com/user-attachments/assets/1697d034-2576-476d-aad0-53266ab6820e" />
+
 Screenshots of every O3DE application's windows, menus, tabs and docks, each captured twice:
 
 - **A**: legacy, the Qt stylesheets on (how O3DE looks today)
@@ -12,6 +14,8 @@ Nothing to install, build or serve: clone the repo (or download the ZIP) and ope
 
 ## Reviewing
 
+<img width="3830" height="1101" alt="image" src="https://github.com/user-attachments/assets/79d08cb5-853f-428a-a0e0-b6eca8f385a7" />
+
 1. Open `index.html` in your browser (double-click it). Firefox, Chrome and Edge all work.
 2. Optional: **Set your name** in the top bar, so your reports carry it.
 3. On the home page, pick an application, or a family (all tabs, all menus, ...), then a screen.
@@ -19,6 +23,8 @@ Nothing to install, build or serve: clone the repo (or download the ZIP) and ope
    same pixel, whichever side you clicked. Add a description if it helps (Ctrl+Enter saves).
    The widget under the point is recorded for you.
 5. Your markers save in this browser as you go, and survive reloads and restarts.
+
+<img width="2412" height="474" alt="image" src="https://github.com/user-attachments/assets/96084805-e19d-48b0-8a7c-d8faa21d2030" />
 
 Viewing a screen:
 
